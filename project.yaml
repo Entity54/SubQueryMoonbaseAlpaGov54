@@ -1,0 +1,86 @@
+specVersion: 1.0.0
+name: moonbeam-starter
+version: 0.0.4
+runner:
+  node:
+    name: "@subql/node"
+    version: "*"
+  query:
+    name: "@subql/query"
+    version: "*"
+description: This SubQuery project can be use as a starting point for Moonbeam network
+repository: "https://github.com/subquery/moonbeam-subql-starters"
+schema:
+  file: ./schema.graphql
+network:
+  chainId: "0x91bc6e169807aaa54802737e1c504b2577d4fafedd5a02c10293b1cd60e39527"
+  endpoint: "wss://moonbeam-alpha.api.onfinality.io/public-ws"
+  dictionary: "https://api.subquery.network/sq/subquery/moonbase-alpha-dictionary"
+  chaintypes:
+    file: ./dist/chaintypes.js
+dataSources:
+  - kind: substrate/Runtime
+    startBlock: 2866000
+    mapping:
+      file: ./dist/index.js
+      handlers:
+        - handler: handlePreImageNotedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: PreimageNoted
+        - handler: handleProposedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Proposed
+        - handler: handleSecondedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Seconded
+        - handler: handleVotedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Voted
+        - handler: handleTabledEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Tabled
+        - handler: handlePassedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Passed
+        - handler: handleNotPassedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: NotPassed
+        - handler: handleExecutedEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Executed
+        - handler: handleProposalCanceledEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: ProposalCanceled
+        - handler: handleReferendumCanceledEvent
+          kind: substrate/EventHandler
+          filter:
+            module: democracy
+            method: Canceled
+        - handler: handleRemoveVoteCall
+          kind: substrate/CallHandler
+          filter:
+            module: democracy
+            method: removeVote
+        - handler: handleUnlockCall
+          kind: substrate/CallHandler
+          filter:
+            module: democracy
+            method: unlock

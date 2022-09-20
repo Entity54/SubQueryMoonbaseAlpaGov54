@@ -1,0 +1,157 @@
+# To improve query performance, we strongly suggest adding indexes to any field that you plan to filter or sort by
+# Add the `@index` or `@index(unique: true)` annotation after any non-key field
+# https://academy.subquery.network/build/graphql.html#indexing-by-non-primary-key-field
+
+type StarterEntity @entity {
+  id: ID! #id is a required field
+  field1: Int!
+
+  field2: String #filed2 is an optional field
+  field3: BigInt
+
+  field4: Date
+
+  field5: Boolean
+}
+
+type AccountId20 @entity {
+  id: ID! #this primary key is set as the toAddress
+}
+
+type Voted @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  voterAccount: AccountId20
+  refIndex: String
+  voteBalance: BigInt
+  voteConvictionNum: String
+  voteLock: String
+  voteDirection: String
+  voteAye: Boolean
+  voteNay: Boolean
+  voteTypeStandard: Boolean
+  extrinsicHash: String
+  eventPayload: String
+  now: String
+  chain: String
+  lastHeader: String
+}
+
+type PreImageNoted @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  preImageHash: String
+  preImageAccount: AccountId20
+  preImageStorageFees: BigInt
+  extrinsicHash: String
+  eventPayload: String
+}
+
+type Proposed @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  proposalIndex: Int
+  proposalDeposit: BigInt
+  proposalAccount: AccountId20
+  extrinsicHash: String
+  eventPayload: String
+}
+
+type Seconded @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  proposalIndex: Int
+  seconderAccount: AccountId20
+  secondedAmount: BigInt
+  extrinsicHash: String
+  eventPayload: String
+}
+
+type Tabled @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  proposalIndex: Int
+  depositAmount: BigInt
+  depositors: [String]
+  referendumIndex: Int
+  eventPayload: String
+}
+
+type Passed @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  referendumIndex: Int
+  scheduledEnactmentBlock: String
+  eventPayload: String
+}
+
+type NotPassed @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  referendumIndex: Int
+  eventPayload: String
+}
+
+type Executed @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  referendumIndex: Int
+  result: String
+  proposalHash: String
+  providerAccount: String
+  refundedAmountString: String
+  refundedAmount: BigInt
+  eventPayload: String
+}
+
+type ProposalCanceled @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  referendumIndex: Int
+  eventPayload: String
+}
+
+type ReferendumCanceled @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  referendumIndex: Int
+  eventPayload: String
+}
+
+type RemoveVoteCall @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  signerAccount: AccountId20
+  argsIndex: String
+}
+
+type UnlockCall @entity {
+  id: ID!
+  blockNum: Int
+  timestamp: Date
+  signerAccount: AccountId20
+  argsTargetAccount: AccountId20
+}
+
+type ActiveProposalsReferendaList @entity {
+  id: ID!
+  blockNum: Int
+  now: String
+  timestamp: Date
+  lowestUnbaked: String
+  referendumCount: String
+  publicPropsLength: Int
+  proposalList: String
+  referendaArray: String
+}
