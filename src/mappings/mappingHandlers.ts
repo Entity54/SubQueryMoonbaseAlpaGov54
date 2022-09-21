@@ -4,7 +4,7 @@ import { AccountId20, Voted, PreImageNoted, Proposed, Seconded, Tabled, Passed, 
          ActiveProposalsReferendaList
         } from "../types";
 import {Balance, Vote } from "@polkadot/types/interfaces";
-import { hexToNumber, hexToBigInt } from '@polkadot/util'; // Some helper functions used here
+import { hexToNumber, hexToBigInt, isHex } from '@polkadot/util'; // Some helper functions used here
 
 
 
@@ -104,9 +104,9 @@ const updateProposalList = async (id, timestamp, blockNum) => {
     const refrendumProposalHash = referendumInfo.ongoing["proposalHash"];              
     const refrendumDelay = referendumInfo.ongoing["delay"];              
     const refrendumTally = {
-                        ayes   : (hexToBigInt(referendumInfo.ongoing["tally"]["ayes"])).toString(), 
-                        nays   : (hexToBigInt(referendumInfo.ongoing["tally"]["nays"])).toString(),
-                        turnout: (hexToBigInt(referendumInfo.ongoing["tally"]["turnout"])).toString()
+                        ayes   : isHex(referendumInfo.ongoing["tally"]["ayes"])?(hexToBigInt(referendumInfo.ongoing["tally"]["ayes"])).toString() : referendumInfo.ongoing["tally"]["ayes"].toString(), 
+                        nays   : isHex(referendumInfo.ongoing["tally"]["nays"])?(hexToBigInt(referendumInfo.ongoing["tally"]["nays"])).toString() : referendumInfo.ongoing["tally"]["nays"].toString(), 
+                        turnout: isHex(referendumInfo.ongoing["tally"]["turnout"])?(hexToBigInt(referendumInfo.ongoing["tally"]["turnout"])).toString() : referendumInfo.ongoing["tally"]["turnout"].toString(), 
                       }
     referendaArray.push({ referendumIndex: i, refrendumEndBlock, refrendumProposalHash, refrendumDelay, refrendumTally,});             
 
@@ -313,7 +313,7 @@ export async function handleSecondedEvent(event: SubstrateEvent): Promise<void> 
 
 //#region handleTabledEvent
 export async function handleTabledEvent(event: SubstrateEvent): Promise<void> {
-    const [proposalIndex, depositAmount, depositors] = event.event.data.toJSON() as any;
+    const [proposalIndex, deposit, depositors] = event.event.data.toJSON() as any;
     logger.info(`\n ********************************************* `);
     let arrayOfDepositors = [];
     depositors.forEach((element) => {
@@ -336,8 +336,9 @@ export async function handleTabledEvent(event: SubstrateEvent): Promise<void> {
     record.referendumIndex = referendumIndex;
     record.depositors = arrayOfDepositors;
     record.proposalIndex = proposalIndex;
-    const balance = (depositAmount as Balance).toString();
+    const balance = (deposit as Balance).toString();
     record.depositAmount = hexToBigInt(balance);
+
     record.blockNum = event.block.block.header.number.toNumber();
     record.timestamp = event.block.timestamp;
     
